@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS retail_clustered (
     amount DOUBLE,
     category STRING,
     product STRING,
+    city STRING,
     state STRING
 )
 CLUSTERED BY (city) INTO 4 BUCKETS
@@ -62,7 +63,7 @@ FIELDS TERMINATED BY ',';
 -- Note: we need to enforce bucketing
 SET hive.enforce.bucketing = true;
 INSERT OVERWRITE TABLE retail_clustered 
-SELECT txnno, custno, amount, category, product, state, city FROM retail;
+SELECT txnno, custno, amount, category, product, city, state FROM retail;
 
 -- 8. Find the total amount group by category.
 SELECT category, SUM(amount) AS total_amount FROM retail GROUP BY category;
