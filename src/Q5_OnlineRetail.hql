@@ -85,9 +85,9 @@ WHERE Description IS NOT NULL;
 -- Assuming InvoiceDate is in format "MM/dd/yy HH:mm" or similar, we extract the month and year
 -- Let's extract the month/year simply. If it's standard string like '12/1/2010 8:26', we can split.
 -- We will just group by the substring representing the month for simplicity, assuming a standard datetime function.
-SELECT substr(InvoiceDate, 1, 7) AS month_year, SUM(Quantity * UnitPrice) AS monthly_sales
+SELECT concat('20', substr(InvoiceDate, 7, 2), '-', substr(InvoiceDate, 1, 2)) AS month_year, SUM(Quantity * UnitPrice) AS monthly_sales
 FROM online_retail
-GROUP BY substr(InvoiceDate, 1, 7)
+GROUP BY concat('20', substr(InvoiceDate, 7, 2), '-', substr(InvoiceDate, 1, 2))
 ORDER BY month_year;
 
 -- (x) Create a partitioned Hive table based on Country.
@@ -136,13 +136,13 @@ WHERE rank = 1;
 
 -- (xiii) Generate a monthly business report
 SELECT 
-    substr(InvoiceDate, 1, 7) AS month_year,
+    concat('20', substr(InvoiceDate, 7, 2), '-', substr(InvoiceDate, 1, 2)) AS month_year,
     SUM(Quantity * UnitPrice) AS Total_Revenue,
     COUNT(DISTINCT InvoiceNo) AS Number_of_Orders,
     COUNT(DISTINCT CustomerID) AS Number_of_Customers,
     SUM(Quantity * UnitPrice) / COUNT(DISTINCT InvoiceNo) AS Average_Order_Value
 FROM online_retail
-GROUP BY substr(InvoiceDate, 1, 7)
+GROUP BY concat('20', substr(InvoiceDate, 7, 2), '-', substr(InvoiceDate, 1, 2))
 ORDER BY month_year;
 
 -- (xiv) Identify customers who purchased products from more than five different categories
