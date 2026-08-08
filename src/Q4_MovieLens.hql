@@ -72,8 +72,8 @@ HAVING COUNT(DISTINCT r.userId) > 50;
 -- (vii) Find the average rating for each genre of movies.
 SELECT genre, AVG(r.rating) AS avg_genre_rating
 FROM movies m
-LATERAL VIEW explode(split(m.genres, '\\|')) exploded_table AS genre
 JOIN ratings r ON m.movieId = r.movieId
+LATERAL VIEW explode(split(m.genres, '\\|')) exploded_table AS genre
 GROUP BY genre;
 
 -- (viii) List the top 10 most rated movies along with their average rating.
@@ -89,8 +89,8 @@ LIMIT 10;
 WITH genre_ratings AS (
     SELECT genre, m.title, AVG(r.rating) as avg_rating, COUNT(r.rating) as num_ratings
     FROM movies m
-    LATERAL VIEW explode(split(m.genres, '\\|')) exploded_table AS genre
     JOIN ratings r ON m.movieId = r.movieId
+    LATERAL VIEW explode(split(m.genres, '\\|')) exploded_table AS genre
     GROUP BY genre, m.title
 ),
 ranked_movies AS (
